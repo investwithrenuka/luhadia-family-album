@@ -52,6 +52,7 @@
             align-items: center;
             justify-content: center;
             animation: fadeInModal 0.5s ease-out;
+            cursor: pointer; /* Indicates it's clickable */
         }
 
         .modal-content {
@@ -64,6 +65,13 @@
             box-shadow: 0 0 0 10px rgba(197, 160, 101, 0.2), 0 30px 60px rgba(0,0,0,0.5);
             border-radius: 4px;
             position: relative;
+            cursor: default; /* Keep cursor normal inside box, or pointer if you want whole box clickable */
+            pointer-events: none; /* Allows clicks to pass through to the parent for easier closing */
+        }
+        
+        /* Re-enable pointer events for the button so it clicks visually */
+        .modal-btn {
+            pointer-events: auto;
         }
 
         .modal-content::before {
@@ -369,7 +377,7 @@
 </head>
 <body>
 
-    <div id="disclaimer-modal">
+    <div id="disclaimer-modal" onclick="closeModal()">
         <div class="modal-content">
             <h2 class="modal-title">Preview Mode</h2>
             <p class="modal-text">
@@ -427,4 +435,99 @@
     <footer>
         <p>Luhadia Family Archive • Jaipur • Global</p>
         <p class="design-credit">
-            Designed by <a href="
+            Designed by <a href="https://wa.me/qr/LPC2ZFAFASQYD1?text=Hello%20Quantum%20Pixel%2C%20I%20really%20liked%20the%20Luhadia%20Family%20website%21" target="_blank">Quantum Pixel</a>
+        </p>
+    </footer>
+
+    <script>
+        // 1. MODAL LOGIC (Auto close + Click anywhere)
+        function closeModal() {
+            const modal = document.getElementById('disclaimer-modal');
+            if(modal) {
+                modal.style.transition = 'opacity 0.5s ease';
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 500);
+            }
+        }
+
+        // Auto-close after 5 seconds
+        window.addEventListener('load', function() {
+            setTimeout(closeModal, 5000);
+        });
+
+        // 2. PAGE NAVIGATION
+        function showPage(pageId) {
+            document.getElementById('home').classList.remove('active-page');
+            document.getElementById('album').classList.remove('active-page');
+            document.getElementById('btn-home').classList.remove('active-btn');
+            document.getElementById('btn-album').classList.remove('active-btn');
+            
+            document.getElementById(pageId).classList.add('active-page');
+            document.getElementById('btn-' + pageId).classList.add('active-btn');
+            
+            if(window.innerWidth < 768) {
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+
+        // 3. SMART HEADER LOGIC
+        let lastScrollTop = 0;
+        const header = document.getElementById('smart-header');
+        window.addEventListener("scroll", function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > 80) {
+                header.classList.add('header-hidden');
+            } else {
+                header.classList.remove('header-hidden');
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // 4. YOUTUBE VIDEO LOGIC
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                videoId: '2XVgiADU2j4',
+                playerVars: {
+                    'playsinline': 1,
+                    'modestbranding': 1,
+                    'rel': 0,
+                    'controls': 1,
+                    'fs': 1
+                },
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function startVideo() {
+            document.getElementById('video-overlay').style.display = 'none';
+            if (player && typeof player.playVideo === 'function') {
+                player.playVideo();
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            const container = document.getElementById('video-container');
+            const header = document.getElementById('smart-header');
+
+            if (event.data == YT.PlayerState.PLAYING) {
+                container.classList.add('cinema-mode');
+                header.classList.add('header-hidden');
+            } 
+            else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
+                container.classList.remove('cinema-mode');
+                header.classList.remove('header-hidden');
+            }
+        }
+    </script>
+</body>
+</html>
