@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Luhadia Family Legacy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Luhadia Family Legacy (Preview)</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
     
     <style>
@@ -15,6 +15,8 @@
             --text-dark: #2c2c2c;
         }
 
+        * { box-sizing: border-box; }
+
         body {
             margin: 0;
             padding: 0;
@@ -25,21 +27,64 @@
             background-image: 
                 radial-gradient(var(--accent-gold) 1px, transparent 1px),
                 radial-gradient(var(--accent-gold) 1px, transparent 1px);
-            background-size: 50px 50px;
-            background-position: 0 0, 25px 25px;
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- Header --- */
+        /* --- WATERMARK STYLING --- */
+        #watermark-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999; /* On top of everything */
+            pointer-events: none; /* CRITICAL: Allows clicks to pass through to the site */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #watermark-text {
+            font-family: 'Lato', sans-serif;
+            font-size: 12vw; /* Responsive size */
+            font-weight: 900;
+            color: rgba(0, 0, 0, 0.08); /* Very faint grey */
+            transform: rotate(-45deg);
+            white-space: nowrap;
+            text-transform: uppercase;
+            user-select: none;
+        }
+
+        /* Repeated faint pattern lines */
+        .watermark-lines {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 100px,
+                rgba(0, 0, 0, 0.02) 100px,
+                rgba(0, 0, 0, 0.02) 200px
+            );
+            pointer-events: none;
+        }
+
+        /* --- Smart Header --- */
         #smart-header {
             position: fixed;
             top: 0;
             width: 100%;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            transition: transform 0.4s ease-in-out;
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             border-bottom: 3px solid var(--accent-gold);
         }
 
@@ -61,14 +106,21 @@
             color: var(--primary-brown);
             text-transform: uppercase;
             letter-spacing: 2px;
+            line-height: 1;
         }
 
         .brand span {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--jaipur-terra);
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             margin-top: 5px;
+            font-weight: 600;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
         }
 
         nav button {
@@ -76,309 +128,34 @@
             border: none;
             font-family: 'Playfair Display', serif;
             font-size: 1rem;
-            margin-left: 20px;
             cursor: pointer;
-            color: #666;
-            transition: color 0.3s;
+            color: #888;
+            transition: all 0.3s;
             text-transform: uppercase;
-            padding: 10px;
+            padding: 10px 15px;
+            border-radius: 4px;
+            letter-spacing: 1px;
         }
 
-        nav button:hover { color: var(--jaipur-terra); }
-        nav button.active-btn { color: var(--primary-brown); font-weight: bold; border-bottom: 2px solid var(--accent-gold); }
+        nav button:hover { color: var(--jaipur-terra); background: rgba(0,0,0,0.03); }
+        
+        nav button.active-btn { 
+            color: var(--primary-brown); 
+            font-weight: 700; 
+            border-bottom: 2px solid var(--accent-gold);
+            background: transparent; 
+        }
 
         /* --- Main Layout --- */
         main {
-            padding-top: 140px;
+            padding-top: 130px;
             padding-bottom: 60px;
             max-width: 1400px;
             margin: 0 auto;
             min-height: 100vh;
         }
 
-        .page-section { display: none; animation: fadeIn 0.8s ease; }
+        .page-section { display: none; animation: fadeIn 0.6s ease-out; width: 100%; }
         .page-section.active-page { display: block; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Video Section --- */
-        .video-container {
-            width: 90%;
-            max-width: 1000px;
-            margin: 0 auto;
-            border: 8px solid #fff;
-            outline: 2px solid var(--accent-gold);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            transition: all 0.5s ease;
-            position: relative;
-            background: #000;
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-        }
-
-        /* The YouTube Iframe */
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-        }
-
-        /* CUSTOM THUMBNAIL OVERLAY */
-        #video-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 10; /* Sits on top of video */
-            background-image: url('https://raw.githubusercontent.com/investwithrenuka/luhadia-family-album/4b5d48dd380140a17d0befa94da8a66bfe3aa6fe/YTthumbnail.png');
-            background-size: cover;
-            background-position: center;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Play Button Icon */
-        .play-btn {
-            width: 80px;
-            height: 80px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 50%;
-            border: 3px solid #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease, background 0.3s;
-        }
-
-        .play-btn::before {
-            content: '';
-            display: block;
-            width: 0; 
-            height: 0; 
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-            border-left: 25px solid #fff;
-            margin-left: 5px;
-        }
-
-        #video-overlay:hover .play-btn {
-            transform: scale(1.1);
-            background: var(--jaipur-terra);
-            border-color: var(--accent-gold);
-        }
-
-        /* Cinema Mode State */
-        .cinema-mode {
-            position: fixed !important;
-            top: 0; left: 0;
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: none !important;
-            z-index: 9999;
-            border: none;
-            outline: none;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: black;
-        }
-
-        .cinema-mode .video-wrapper {
-            width: 100%;
-            height: 100%;
-            padding-bottom: 0;
-        }
-
-        /* --- Book Section --- */
-        .book-stage {
-            width: 95%;
-            height: 85vh;
-            margin: 0 auto;
-            background: white;
-            padding: 15px;
-            border: 1px solid var(--accent-gold);
-            box-shadow: 
-                0 0 0 10px var(--bg-cream), 
-                0 0 0 12px var(--accent-gold),
-                0 20px 50px rgba(0,0,0,0.2);
-        }
-
-        iframe.pdf-viewer { width: 100%; height: 100%; border: none; }
-
-        .story-text {
-            text-align: center;
-            max-width: 700px;
-            margin: 60px auto;
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #444;
-        }
-
-        .drop-cap {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            color: var(--jaipur-terra);
-            float: left;
-            line-height: 0.8;
-            margin-right: 10px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px;
-            background: var(--primary-brown);
-            color: #ccc;
-            font-size: 0.9rem;
-            border-top: 4px solid var(--accent-gold);
-        }
-
-        @media (max-width: 768px) {
-            .header-content { flex-direction: column; }
-            nav { margin-top: 15px; }
-            main { padding-top: 180px; }
-        }
-    </style>
-</head>
-<body>
-
-    <header id="smart-header">
-        <div class="header-content">
-            <div class="brand">
-                <h1>Luhadia</h1>
-                <span>A Meeting of Generations</span>
-            </div>
-            <nav>
-                <button id="btn-home" class="active-btn" onclick="showPage('home')">Legacy Film</button>
-                <button id="btn-album" onclick="showPage('album')">Legacy Book</button>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        <div id="home" class="page-section active-page">
-            
-            <div id="video-container" class="video-container">
-                <div class="video-wrapper">
-                    <div id="video-overlay" onclick="startVideo()">
-                        <div class="play-btn"></div>
-                    </div>
-                    
-                    <div id="youtube-player"></div>
-                </div>
-            </div>
-
-            <div class="story-text">
-                <span class="drop-cap">W</span>elcome to the digital archive of the Luhadia family. 
-                This platform is dedicated to preserving our shared history, tracing our lineage from 
-                the heritage of Jaipur to our modern global footprint.
-            </div>
-        </div>
-
-        <div id="album" class="page-section">
-            <div class="book-stage">
-                <iframe 
-                    src="https://heyzine.com/flip-book/f9fa5f7ce0.html" 
-                    class="pdf-viewer" 
-                    title="Family Album">
-                </iframe>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <p>Luhadia Family Archive • Jaipur • Global</p>
-    </footer>
-
-    <script>
-        // --- 1. ROBUST PAGE NAVIGATION ---
-        function showPage(pageId) {
-            // Hide all sections
-            document.getElementById('home').classList.remove('active-page');
-            document.getElementById('album').classList.remove('active-page');
-            
-            // Remove active class from buttons
-            document.getElementById('btn-home').classList.remove('active-btn');
-            document.getElementById('btn-album').classList.remove('active-btn');
-            
-            // Show selected section & highlight button
-            document.getElementById(pageId).classList.add('active-page');
-            document.getElementById('btn-' + pageId).classList.add('active-btn');
-        }
-
-        // --- 2. HEADER SCROLL LOGIC ---
-        let lastScrollTop = 0;
-        const header = document.getElementById('smart-header');
-        window.addEventListener("scroll", function() {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop && scrollTop > 100) {
-                header.classList.add('header-hidden');
-            } else {
-                header.classList.remove('header-hidden');
-            }
-            lastScrollTop = scrollTop;
-        });
-
-        // --- 3. VIDEO & OVERLAY LOGIC ---
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                videoId: '2XVgiADU2j4',
-                playerVars: {
-                    'playsinline': 1,
-                    'modestbranding': 1,
-                    'rel': 0,
-                    'controls': 1
-                },
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        // FAIL-SAFE PLAY FUNCTION
-        function startVideo() {
-            // 1. Immediately hide the thumbnail overlay so the user can see the player
-            document.getElementById('video-overlay').style.display = 'none';
-
-            // 2. Try to auto-play using the API
-            if (player && typeof player.playVideo === 'function') {
-                player.playVideo();
-            } else {
-                // If API isn't ready yet, that's fine. The overlay is gone, 
-                // so the user can just click the normal YouTube play button.
-                console.log("Player not fully ready, manual click available.");
-            }
-        }
-
-        function onPlayerStateChange(event) {
-            const container = document.getElementById('video-container');
-            const header = document.getElementById('smart-header');
-
-            // If Playing -> Enter Cinema Mode
-            if (event.data == YT.PlayerState.PLAYING) {
-                container.classList.add('cinema-mode');
-                header.classList.add('header-hidden'); // Hide header
-            } 
-            // If Paused/Ended -> Exit Cinema Mode
-            else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
-                container.classList.remove('cinema-mode');
-                header.classList.remove('header-hidden'); // Show header
-            }
-        }
-    </script>
-</body>
-</html>
