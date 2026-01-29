@@ -213,4 +213,108 @@
             border-radius: 0;
         }
 
-        /* Floating Exit
+        /* Floating Exit Button */
+        #exit-theater-btn {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 1px solid white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: sans-serif;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        
+        #exit-theater-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        body.theater-mode #exit-theater-btn {
+            display: block; /* Show only in Theater Mode */
+        }
+
+    </style>
+</head>
+<body>
+
+    <button id="exit-theater-btn" onclick="toggleTheaterMode()">✖ Exit Theater Mode</button>
+
+    <nav>
+        <button class="nav-btn active" onclick="showPage('home')">The Journey (Video)</button>
+        <button class="nav-btn" onclick="showPage('album')">Family Album (Book)</button>
+        <button class="nav-btn theater-btn" onclick="toggleTheaterMode()">⎚ Theater Mode</button>
+    </nav>
+
+    <header>
+        <h1>Luhadia</h1>
+        <div class="subtitle">A Meeting of Generations</div>
+    </header>
+
+    <div id="home" class="page-section active-page">
+        <div class="video-container">
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/2XVgiADU2j4?rel=0&modestbranding=1" 
+                    title="Luhadia Family History" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+        
+        <div class="story-text">
+            Welcome to the digital archive of the Luhadia family. 
+            Tracing our lineage from the heritage of Jaipur to our modern global footprint.
+        </div>
+    </div>
+
+    <div id="album" class="page-section">
+        <div class="book-stage">
+            <div class="book-frame">
+                <iframe 
+                    src="https://heyzine.com/flip-book/f9fa5f7ce0.html" 
+                    class="pdf-viewer" 
+                    title="Family Album Flipbook"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Luhadia Family Archive</p>
+    </footer>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-page'));
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                // Don't remove 'active' from the theater button, only nav tabs
+                if(!b.classList.contains('theater-btn')) {
+                    b.classList.remove('active');
+                }
+            });
+            
+            document.getElementById(pageId).classList.add('active-page');
+            
+            const buttons = document.querySelectorAll('.nav-btn');
+            if(pageId === 'home') buttons[0].classList.add('active');
+            if(pageId === 'album') buttons[1].classList.add('active');
+        }
+
+        function toggleTheaterMode() {
+            document.body.classList.toggle('theater-mode');
+        }
+    </script>
+
+</body>
+</html>
