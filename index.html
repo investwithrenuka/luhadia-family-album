@@ -123,10 +123,14 @@
             background: #000;
         }
 
-        .video-wrapper {
+        ..video-wrapper {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
+            padding-bottom: 56.25%;
             height: 0;
+            /* ADD THESE 3 LINES: */
+            background-color: #000;
+            background-image: url('YTthumbnail.png'); 
+            background-size: cover;
         }
 
         .video-wrapper iframe, .video-wrapper div {
