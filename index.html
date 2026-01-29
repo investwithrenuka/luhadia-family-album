@@ -159,3 +159,287 @@
         .page-section.active-page { display: block; }
 
         @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Video Section --- */
+        .video-container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            border: 8px solid #fff;
+            outline: 2px solid var(--accent-gold);
+            box-shadow: 0 15px 50px rgba(62, 43, 29, 0.25);
+            transition: all 0.5s ease;
+            position: relative;
+            background: #000;
+            border-radius: 2px;
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        /* Custom Thumbnail */
+        #video-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10;
+            background-image: url('https://raw.githubusercontent.com/investwithrenuka/luhadia-family-album/4b5d48dd380140a17d0befa94da8a66bfe3aa6fe/YTthumbnail.png');
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s;
+        }
+
+        .play-btn {
+            width: 70px;
+            height: 70px;
+            background: rgba(62, 43, 29, 0.85);
+            border-radius: 50%;
+            border: 2px solid var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 6px rgba(197, 160, 101, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .play-btn::before {
+            content: '';
+            display: block;
+            width: 0; height: 0; 
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 20px solid #fff;
+            margin-left: 5px;
+        }
+
+        #video-overlay:hover .play-btn { transform: scale(1.1); background: var(--jaipur-terra); }
+
+        /* Cinema Mode */
+        .cinema-mode {
+            position: fixed !important;
+            top: 0; left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            height: 100dvh !important;
+            max-width: none !important;
+            z-index: 9999;
+            border: none;
+            outline: none;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: black;
+            border-radius: 0;
+        }
+        .cinema-mode .video-wrapper { width: 100%; height: 100%; padding-bottom: 0; }
+
+        /* --- Book Section --- */
+        .book-stage {
+            width: 95%;
+            height: 82vh;
+            height: 82dvh;
+            margin: 0 auto;
+            background: white;
+            padding: 10px;
+            border: 1px solid var(--accent-gold);
+            box-shadow: 
+                0 0 0 6px var(--bg-cream), 
+                0 0 0 8px var(--accent-gold),
+                0 15px 40px rgba(0,0,0,0.15);
+            border-radius: 2px;
+        }
+
+        iframe.pdf-viewer { width: 100%; height: 100%; border: none; }
+
+        /* --- Text & Footer --- */
+        .story-text {
+            text-align: center;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 0 20px;
+            font-size: 1.25rem;
+            line-height: 1.7;
+            color: #444;
+        }
+
+        .drop-cap {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--jaipur-terra);
+            float: left;
+            line-height: 0.85;
+            margin-right: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: var(--primary-brown);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            border-top: 4px solid var(--accent-gold);
+            letter-spacing: 1px;
+        }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; padding: 15px; }
+            .brand { margin-bottom: 15px; text-align: center; }
+            .brand h1 { font-size: 1.6rem; }
+            nav { width: 100%; justify-content: center; }
+            nav button { font-size: 0.85rem; padding: 8px 12px; flex: 1; max-width: 140px; }
+            main { padding-top: 160px; }
+            .video-container { width: 100%; border-width: 0; outline: none; }
+            .book-stage { width: 100%; padding: 0; border: none; box-shadow: none; height: 75vh; }
+            .story-text { font-size: 1.1rem; text-align: left; }
+            .play-btn { width: 60px; height: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="watermark-overlay">
+        <div class="watermark-lines"></div>
+        <div id="watermark-text">PREVIEW MODE</div>
+    </div>
+
+    <header id="smart-header">
+        <div class="header-content">
+            <div class="brand">
+                <h1>Luhadia</h1>
+                <span>A Meeting of Generations</span>
+            </div>
+            <nav>
+                <button id="btn-home" class="active-btn" onclick="showPage('home')">Legacy Film</button>
+                <button id="btn-album" onclick="showPage('album')">Legacy Book</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div id="home" class="page-section active-page">
+            
+            <div id="video-container" class="video-container">
+                <div class="video-wrapper">
+                    <div id="video-overlay" onclick="startVideo()">
+                        <div class="play-btn"></div>
+                    </div>
+                    
+                    <div id="youtube-player"></div>
+                </div>
+            </div>
+
+            <div class="story-text">
+                <span class="drop-cap">W</span>elcome to the digital archive of the Luhadia family. 
+                This platform is dedicated to preserving our shared history, tracing our lineage from 
+                the heritage of Jaipur to our modern global footprint.
+            </div>
+        </div>
+
+        <div id="album" class="page-section">
+            <div class="book-stage">
+                <iframe 
+                    src="https://heyzine.com/flip-book/f9fa5f7ce0.html" 
+                    class="pdf-viewer" 
+                    title="Family Album">
+                </iframe>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Luhadia Family Archive • Jaipur • Global</p>
+    </footer>
+
+    <script>
+        // 1. PAGE NAVIGATION
+        function showPage(pageId) {
+            document.getElementById('home').classList.remove('active-page');
+            document.getElementById('album').classList.remove('active-page');
+            document.getElementById('btn-home').classList.remove('active-btn');
+            document.getElementById('btn-album').classList.remove('active-btn');
+            
+            document.getElementById(pageId).classList.add('active-page');
+            document.getElementById('btn-' + pageId).classList.add('active-btn');
+            
+            if(window.innerWidth < 768) {
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+
+        // 2. SMART HEADER LOGIC
+        let lastScrollTop = 0;
+        const header = document.getElementById('smart-header');
+        window.addEventListener("scroll", function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > 80) {
+                header.classList.add('header-hidden');
+            } else {
+                header.classList.remove('header-hidden');
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // 3. YOUTUBE VIDEO LOGIC
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                videoId: '2XVgiADU2j4',
+                playerVars: {
+                    'playsinline': 1,
+                    'modestbranding': 1,
+                    'rel': 0,
+                    'controls': 1,
+                    'fs': 1
+                },
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function startVideo() {
+            document.getElementById('video-overlay').style.display = 'none';
+            if (player && typeof player.playVideo === 'function') {
+                player.playVideo();
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            const container = document.getElementById('video-container');
+            const header = document.getElementById('smart-header');
+
+            if (event.data == YT.PlayerState.PLAYING) {
+                container.classList.add('cinema-mode');
+                header.classList.add('header-hidden');
+            } 
+            else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.ENDED) {
+                container.classList.remove('cinema-mode');
+                header.classList.remove('header-hidden');
+            }
+        }
+    </script>
+</body>
+</html>
